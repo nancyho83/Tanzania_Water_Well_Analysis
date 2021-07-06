@@ -63,20 +63,20 @@ In the future, if we wanted to adjust the models to plan for new and pre-existin
 
 ## For More Information
 
-You can review the full analysis in the [Jupyter Notebook](./tanzania-well-analysis.ipynb) or the [presentation](./tanzania-well-analysis-presentation.pdf)
+You can review the full analysis in the [Jupyter Notebook](./Tanzania_Water_Well_Analysis.ipynb) or the [presentation](./Tanzania_Water_Well_Analysis_Presentation.pdf )
 
 For any additional questions, please contact **Nancy Ho** at [nancyho83@yahoo.com].
 
 ## Sources
 
 Data source: 
-[DrivenData Competition Pump it Up: Data Mining the Water Table](https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/23/)
+[DrivenData Competition, Pump it Up: Data Mining the Water Table](https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/23/)
 
 [Scikit-learn library and official documentation](https://scikit-learn.org/stable/index.html)
 
-Research on water sanitation in Tanzania/Africa:
-<br>[water.org, Where We Work: Tanzania](https://water.org/our-impact/where-we-work/tanzania/)</br>
-<br>[LifeWater, The Tanzania Water Crisis: Facts, Progress, and How to Help](https://lifewater.org/blog/tanzania-water-crisis-facts/)</br>
+Research on water sanitation in Tanzania:
+<br>[water.org, Where We Work: Tanzania](https://water.org/our-impact/where-we-work/tanzania/)
+<br>[LifeWater, The Tanzania Water Crisis: Facts, Progress, and How to Help](https://lifewater.org/blog/tanzania-water-crisis-facts/)
 
 ## Repository Structure
 ```
