@@ -35,15 +35,19 @@ Our first model will use the [LogisticRegression](https://scikit-learn.org/stabl
 Before evaluating it against our holdout test data, we measure the performance of our model using cross-validation, which splits the training set into smaller subsets and tests the model among the rest of the data, using scikit-learn's [cross_val_score](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html) function. Then to measure the performance of our model against our test data, I use the [f1_score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html) as our primary metric, which will give us a general idea of how effectively our model can identify the status of a well without falsely classifying it under the wrong status (i.e. identifying a non functional well as functional). Overall, our F1 score of 0.70 gives us about the same result as our cross-validated score, the only significant difference being that the F1 score is averaged across our three classes. 
 
 To gain a better idea of how well our model can distinguish between classes, we can also use a confusion matrix to see how often our model identified wells under their true labels against the labels our model predicted. Even though this model seems to have performed well, overall this model misclassifies a majority of wells as functional; the class imbalance in the data may have caused this bias in our model.
+
 ![Logistic regression confusion matrix](./images/logreg_confusion_matrix.png)
 
 Our next model utilizes the [Random Forest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html) classifier, which fits and averages subsets of decision tree classifiers to improve the accuracy of our model and prevent overfitting of our data. This model slightly outperforms our logistic regression model, as we see higher cross-validated scores and a higher F1 score of 0.72. Its improved performance also reflects in its confusion matrix; it was able to identify more non-functional and functional needs repair wells than our first model! 
+
 ![Random forest confusion matrix](./images/rf_confusion_matrix.png)
 
 Unfortunately, this classifier seems to perform significantly worse than our first two models. The confusion matrix also shows a less than ideal performance of the Naive Bayes model, showing us that it identified most of our water wells as "functional needs repair" with no regard to whether it was actually functional or non-functional.
+
 ![Gaussian Naive Bayes confusion matrix](./images/gnb_confusion_matrix.png)
 
 It seems that our random forest model performed the best in predicting whether a well was either "non functional" or "functional needs repair", scoring the highest of our three models. We thenperform hyperparameter tuning on this model to find the optimal parameters with which we can train it with. We create a parameter grid of test values to use on our model and then use [GridSearchCV](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html) to search through the given test parameters that will allow the best performance from our model. We were able to identify parameter values that ended up improving our Random Forest classifier's performance, increasing our F1 score to 0.75; however, this model also shows a more significant bias than our first one towards identifying functional wells.
+
 ![Random forest confusion matrix after grid search](./images/rf_gridsearch_confusion_matrix.png)
 
 ## Conclusion
