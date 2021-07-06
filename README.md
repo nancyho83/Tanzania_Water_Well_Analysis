@@ -1,113 +1,88 @@
+![Image of Tanzanian mother gathering water from a swamp](https://lifewater.org/wp-content/uploads/2019/10/witness.jpg)
 
-# Phase 3 Project
+# Predictive Modeling of Tanzanian Water Well Functionality
 
-Congratulations! You've made it through another _intense_ module, and now you're ready to show off your newfound Machine Learning skills!
+**Author:** Nancy Ho
 
-![awesome](https://raw.githubusercontent.com/learn-co-curriculum/dsc-phase-3-project/main/images/smart.gif)
+## Overview
 
-All that remains in Phase 3 is to put your new skills to use with another large project! This project should take 20 to 30 hours to complete.
+This predictive analysis was performed with the goal of providing a way to predict the functionality of water wells in Tanzania for those who may need to use it (non-profit charity groups, public works officials, etc) for the upkeep of existing water wells. Using machine learning classifiers from the [scikit-learn](https://scikit-learn.org/stable/index.html) library, we create a model that will help us predict the condition of water wells based on their information.
 
-## Project Overview
+## Business Problem
 
-For this project, you will engage in the full data science process from start to finish, solving a classification problem using a dataset of your choice.
+The ongoing water crisis in Tanzania has made it difficult for the people in its villages to obtain clean, sanitary water, and in recent years an increasing number of non-profit organizations have pooled donations across the globe towards an effort to provide water sources for these villages. Thousands of wells have been drilled in Tanzania so far, and many more continue to be developed across the continent. 
 
-### The Data
+While planning out the best locations to drill new wells is the best way to ensure more Tanzanians have access to clean water, the process of drilling new wells is extensive and requires a large amount of resources, finances, and labor. It's also important to ensure that the wells that are already present are functional in the meantime so that villages have sustainable access to clean water. By also figuring out how to allocate the necessary  funds and labor necessary to perform maintenance work on pre-existing wells, we can ensure that new wells can be drilled without unnecessarily neglecting others.
 
-You have the option to either **choose a dataset from a curated list** or **choose your own dataset _not on the list_**. The goal is to choose a dataset appropriate to the type of business problem and/or classification methods that most interests you. It is up to you to define a stakeholder and business problem appropriate to the dataset you choose. If you are feeling overwhelmed or behind, we recommend you choose dataset #2 or #3 from the curated list.
+Using the scikit-learn machine learning library, we will test out models that will allow us to predict the condition of water wells in Tanzania based on information about these wells such as when they were constructed, the extraction methods utilized, etc. While the main focus of this analysis will be Tanzanian water wells, this may also provide the foundation for a predictive model that can be applied to water wells across the rest of the African continent.
 
-If you choose a dataset from the curated list, **inform your instructor which dataset you chose** and jump right into the project. If you choose your own dataset, **run the dataset and business problem by your instructor for approval** before starting your project.
+## Data
 
-### Curated List of Datasets
+We will be using data on water wells in Tanzania provided by [DrivenData](https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/23/) from Taarifa and the Tanzanian Ministry of Water, which can be found in the repository's `data` folder. More information about each value in this dataset can be found on the "Problem Description" tab of the competition page, found [here](https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/25/).
 
-You may select any of the four datasets below - we provide brief descriptions of each. Follow the links to learn more about the dataset and business problems before making a final decision.
+## Methods
 
-#### 1) [Chicago Car Crashes](https://data.cityofchicago.org/Transportation/Traffic-Crashes-Crashes/85ca-t3if)
-Note this links also to [Vehicle Data](https://data.cityofchicago.org/Transportation/Traffic-Crashes-Vehicles/68nd-jvt3) and to [Driver/Passenger Data](https://data.cityofchicago.org/Transportation/Traffic-Crashes-People/u6pd-qa9d).
+Since the data is pre-split into labels representing each well in the data and values relating to each well, I import both datasets and join them by the `id` column to investigate the data. The dataset contains many attributes about each water well, many of which are irrelevant to  the condition of Tanzanian water wells, so I remove any columns that would potentially have little effect on our models later on. I also remove columns that contain redundant information about subgroups of attributes of each well; I choose to keep the "group" variables instead of more specific columns since this model is intended to predict the condition of a well based on broad details for now.
 
-Build a classifier to predict the primary contributory cause of a car accident, given information about the car, the people in the car, the road conditions etc. You might imagine your audience as a Vehicle Safety Board who's interested in reducing traffic accidents, or as the City of Chicago who's interested in becoming aware of any interesting patterns. Note that there is a **multi-class** classification problem. You will almost certainly want to bin or trim or otherwise limit the number of target categories on which you ultimately predict. Note e.g. that some primary contributory causes have very few samples.
+As we can see from the figure above, these classes are imbalanced. which may cause our models to become more biased towards the majority class, functional. While we could merge the functional needs repair entries into the non functional class, I believe that it is important to distinguish a functioning well in need of repair from an outright non-functional one. Depending on what resources are available to us, we might choose to perform maintenance on wells that need repair before working on non-functional wells, or vice versa. Therefore, I will proceed with creating our models with the data as is, keeping in mind that there is a possibility our data will be biased towards predicting functional wells instead.
 
-#### 2) [Terry Traffic Stops](https://catalog.data.gov/dataset/terry-stops)
-In [*Terry v. Ohio*](https://www.oyez.org/cases/1967/67), a landmark Supreme Court case in 1967-8, the court found that a police officer was not in violation of the "unreasonable search and seizure" clause of the Fourth Amendment, even though he stopped and frisked a couple of suspects only because their behavior was suspicious. Thus was born the notion of "reasonable suspicion", according to which an agent of the police may e.g. temporarily detain a person, even in the absence of clearer evidence that would be required for full-blown arrests etc. Terry Stops are stops made of suspicious drivers.
+## Model Creation and Evaluation
 
-Build a classifier to predict whether an arrest was made after a Terry Stop, given information about the presence of weapons, the time of day of the call, etc. Note that this is a **binary** classification problem.
+Before I create our predictive models, I split the data into training and test sets so that we have a set of data to train our models with, while holding out a subset of our data that we use to evaluate the performance of our model later on.
 
-Note that this dataset also includes information about gender and race. You **may** use this data as well. You may, e.g. pitch your project as an inquiry into whether race (of officer or of subject) plays a role in whether or not an arrest is made.
+Our first model will use the [LogisticRegression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html) classifier. Normally this is designed for binary classification, but for our purposes we will include the `multinomial` argument so that we can perform classification on all our classes. Once we create a pipeline from scikit-learn's `Pipeline` module and fit the model on the training data, we can start evaluating our model in two ways. 
 
-If you **do** elect to make use of race or gender data, be aware that this can make your project a highly sensitive one; your discretion will be important, as well as your transparency about how you use the data and the ethical issues surrounding it.
+Before evaluating it against our holdout test data, we measure the performance of our model using cross-validation, which splits the training set into smaller subsets and tests the model among the rest of the data, using scikit-learn's [cross_val_score](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html) function. Then to measure the performance of our model against our test data, I use the [f1_score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html) as our primary metric, which will give us a general idea of how effectively our model can identify the status of a well without falsely classifying it under the wrong status (i.e. identifying a non functional well as functional). Overall, our F1 score of 0.70 gives us about the same result as our cross-validated score, the only significant difference being that the F1 score is averaged across our three classes. 
 
-#### 3) [SyriaTel Customer Churn](https://www.kaggle.com/becksddf/churn-in-telecoms-dataset)
+To gain a better idea of how well our model can distinguish between classes, we can also use a confusion matrix to see how often our model identified wells under their true labels against the labels our model predicted. Even though this model seems to have performed well, overall this model misclassifies a majority of wells as functional; the class imbalance in the data may have caused this bias in our model.
+![Logistic regression confusion matrix](./images/logreg_confusion_matrix.png)
 
-Build a classifier to predict whether a customer will ("soon") stop doing business with SyriaTel, a telecommunications company. Note that this is a **binary** classification problem.
+Our next model utilizes the [Random Forest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html) classifier, which fits and averages subsets of decision tree classifiers to improve the accuracy of our model and prevent overfitting of our data. This model slightly outperforms our logistic regression model, as we see higher cross-validated scores and a higher F1 score of 0.72. Its improved performance also reflects in its confusion matrix; it was able to identify more non-functional and functional needs repair wells than our first model! 
+![Random forest confusion matrix](./images/rf_confusion_matrix.png)
 
-Most naturally, your audience here would be the telecom business itself, interested in losing money on customers who don't stick around very long. Are there any predictable patterns here?
+Unfortunately, this classifier seems to perform significantly worse than our first two models. The confusion matrix also shows a less than ideal performance of the Naive Bayes model, showing us that it identified most of our water wells as "functional needs repair" with no regard to whether it was actually functional or non-functional.
+![Gaussian Naive Bayes confusion matrix](./images/gnb_confusion_matrix.png)
 
-#### 4) [Tanzanian Water Well Data](https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/23/)
-This dataset is part of an *active competition* until April 31, 2021!
+It seems that our random forest model performed the best in predicting whether a well was either "non functional" or "functional needs repair", scoring the highest of our three models. We thenperform hyperparameter tuning on this model to find the optimal parameters with which we can train it with. We create a parameter grid of test values to use on our model and then use [GridSearchCV](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html) to search through the given test parameters that will allow the best performance from our model. We were able to identify parameter values that ended up improving our Random Forest classifier's performance, increasing our F1 score to 0.75; however, this model also shows a more significant bias than our first one towards identifying functional wells.
+![Random forest confusion matrix after grid search](./images/rf_gridsearch_confusion_matrix.png)
 
-Tanzania, as a developing country, struggles with providing clean water to its population of over 57,000,000. There are many waterpoints already established in the country, but some are in need of repair while others have failed altogether.
+## Conclusion
 
-Build a classifier to predict the condition of a water well, using information about the sort of pump, when it was installed, etc. Note that this is a **ternary** classification problem.
+Of the three models that we trained using our data, the random forest model performed the best, as it was able to minimize the amount of error in misclassifying the condition of each well with a F1 score of 0.72. Using this knowledge, we were able to find optimized parameters for our model to further improve the accuracy the model; with these new parameters, our F1 score increased to 0.75.
 
-### Sourcing Your Own Data
+While this model does not perform exceptionally well in correctly identifying which wells need repair, with an averaged precision and recall score of 0.75, it is satisfactory in providing us with a model that can predict the condition of wells through general information made available about them. As the water crisis in Tanzania continues, we can use this model as a starting point to create more complex models later on to better identify and prioritize the work that needs to be done to ensure Tanzanian villages continue to have sustainable access to clean water.
 
-Sourcing new data is a valuable skill for data scientists, but it requires a great deal of care. An inappropriate dataset or an unclear business problem can lead you spend a lot of time on a project that delivers underwhelming results. The guidelines below will help you complete a project that demonstrates your ability to engage in the full data science process.
+### Next Steps
 
-Your dataset must be...
+In the future, if we wanted to adjust the models to plan for new and pre-existing wells more effectively, there are several steps we can take:
+- Attempt re-training our models with more balanced data, since many of our models were affected by the bias caused by class imbalance in our data. If we aren't interested in discerning functional from non-functional wells to determine whether to repair them, we could merge the amounts in the `functional needs repair` and `non functional` classes and see if that provides a more accurate model.
+- For the sake of simplicity and performance, these models do not include specific subtypes of the attributes included (e.g. extraction types). We could create a model in the future for each attribute that takes these subtypes into account, possibly to gain a better understanding of which wells need repair.
+- Doing more research on geological and ecological factors that might impact the performance and condition of water wells may also help us plan the process of performing work on Tanzania's water wells. Water quality is also important to providing sanitary water to villages, and involves many other factors beyond the scope of what is covered in this dataset.
+- If we want to broaden our model to accomodate for wells across Africa, we can run our best model again provided data on water wells from other regions in Africa.
 
-1. **Appropriate for classification.** It should have a categorical outcome or the data needed to engineer one.   
 
-2. **Usable to solve a specific business problem.** This solution must rely on your classification model.
+## For More Information
 
-3. **Somewhat complex.** It should contain a minimum of 1000 rows and 10 features.
+You can review the full analysis in the [Jupyter Notebook](./tanzania-well-analysis.ipynb) or the [presentation](./tanzania-well-analysis-presentation.pdf)
 
-4. **Unfamiliar.** It can't be one we've already worked with during the course or that is commonly used for demonstration purposes (e.g. MNIST).
+For any additional questions, please contact **Nancy Ho** at [nancyho83@yahoo.com].
 
-5. **Manageable.** Stick to datasets that you can model using the techniques introduced in Phase 3.
+## Sources
 
-Once you've sourced your own dataset and identified the business problem you want to solve with it, you must to **run them by your instructor for approval**.
+Data source: 
+[DrivenData Competition Pump it Up: Data Mining the Water Table](https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/23/)
 
-#### Problem First, or Data First?
+[Scikit-learn library and official documentation](https://scikit-learn.org/stable/index.html)
 
-There are two ways that you can source your own dataset: **_Problem First_** or **_Data First_**. The less time you have to complete the project, the more strongly we recommend a Data First approach to this project.
+Research on water sanitation in Tanzania/Africa:
+[water.org, Where We Work: Tanzania](https://water.org/our-impact/where-we-work/tanzania/)
+[LifeWater, The Tanzania Water Crisis: Facts, Progress, and How to Help](https://lifewater.org/blog/tanzania-water-crisis-facts/)
 
-**_Problem First_**: Start with a problem that you are interested in that you could potentially solve with a classification model. Then look for data that you could use to solve that problem. This approach is high-risk, high-reward: Very rewarding if you are able to solve a problem you are invested in, but frustrating if you end up sinking lots of time in without finding appropriate data. To mitigate the risk, set a firm limit for the amount of time you will allow yourself to look for data before moving on to the Data First approach.
-
-**_Data First_**: Take a look at some of the most popular internet repositories of cool data sets we've listed below. If you find a data set that's particularly interesting for you, then it's totally okay to build your problem around that data set.
-
-There are plenty of amazing places that you can get your data from. We recommend you start looking at data sets in some of these resources first:
-
-* [UCI Machine Learning Datasets Repository](https://archive.ics.uci.edu/ml/datasets.php)
-* [Kaggle Datasets](https://www.kaggle.com/datasets)
-* [Awesome Datasets Repo on Github](https://github.com/awesomedata/awesome-public-datasets)
-* [New York City Open Data Portal](https://opendata.cityofnewyork.us/)
-* [Inside AirBNB](http://insideairbnb.com/)
-
-## The Deliverables
-
-There are three deliverables for this project:
-
-* A **GitHub repository**
-* A **Jupyter Notebook**
-* A **non-technical presentation**
-
-Review the "Project Submission & Review" page in the "Milestones Instructions" topic for instructions on creating and submitting your deliverables. Refer to the rubric associated with this assignment for specifications describing high-quality deliverables.
-
-### Key Points
-
-* **Your deliverables should explicitly address each step of the data science process.** Refer to [the Data Science Process lesson](https://github.com/learn-co-curriculum/dsc-data-science-processes) from Topic 19 for more information about process models you can use.
-
-* **Your Jupyter Notebook should demonstrate an iterative approach to modeling.** This means that you begin with a basic model, evaluate it, and then provide justification for and proceed to a new model. We encourage you to try a bunch of different models: logistic regression, decision trees, or anything else you think would be appropriate.
-
-* **You must choose appropriate classification metrics and use them to evaluate your models.** Choosing the right classification metrics is a key data science skill, and should be informed by data exploration and the business problem itself. You must then use this metric to evaluate your model performance using both training and testing data.
-
-## Getting Started
-
-Create a new repository for your project to get started. We recommend structuring your project repository similar to the structure in [the Phase 1 Project Template](https://github.com/learn-co-curriculum/dsc-project-template). You can do this either by creating a new fork of that repository to work in or by building a new repository from scratch that mimics that structure.
-
-## Project Submission and Review
-
-Review the "Project Submission & Review" page in the "Milestones Instructions" topic to learn how to submit your project and how it will be reviewed. Your project must pass review for you to progress to the next Phase.
-
-## Summary
-
-This project is an opportunity to expand your data science toolkit by evaluating, choosing, and working with new datasets. Spending time up front making sure you have a good dataset for a solvable problem will help avoid the major problems that can sometimes derail data science projects. You've got this!
+## Repository Structure
+```
+├── README.md                                            <- Top-level README for reviewers of this project
+├── Tanzania_Water_Well_Analysis.ipynb                   <- Narrative documentation of analysis in Jupyter notebook
+├── Tanzania_Water_Well_Analysis_Presentation.pdf        <- PDF version of project presentation
+├── data                                                 <- Both sourced externally and generated from code
+└── images                                               <- Both sourced externally and generated from code
+```
