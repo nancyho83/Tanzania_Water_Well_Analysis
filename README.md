@@ -75,8 +75,8 @@ Data source:
 [Scikit-learn library and official documentation](https://scikit-learn.org/stable/index.html)
 
 Research on water sanitation in Tanzania/Africa:
-[water.org, Where We Work: Tanzania](https://water.org/our-impact/where-we-work/tanzania/)
-[LifeWater, The Tanzania Water Crisis: Facts, Progress, and How to Help](https://lifewater.org/blog/tanzania-water-crisis-facts/)
+<br>[water.org, Where We Work: Tanzania](https://water.org/our-impact/where-we-work/tanzania/)</br>
+<br>[LifeWater, The Tanzania Water Crisis: Facts, Progress, and How to Help](https://lifewater.org/blog/tanzania-water-crisis-facts/)</br>
 
 ## Repository Structure
 ```
